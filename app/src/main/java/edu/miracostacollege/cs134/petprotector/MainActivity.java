@@ -3,10 +3,13 @@ package edu.miracostacollege.cs134.petprotector;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView petImageView;
+    public static final int RESULT_LOAD_IMAGE = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,37 @@ public class MainActivity extends AppCompatActivity {
 
             //make the request to the user (Backwards compatible)
             ActivityCompat.requestPermissions(this, perms, permReqCode);
+        }
 
+        //after requesting permissions, find out which ones the user granted
+        if(hasCameraPerm == PackageManager.PERMISSION_GRANTED &&
+            hasReadExternalPerm == PackageManager.PERMISSION_GRANTED &&
+            hasWriteExternalPerm == PackageManager.PERMISSION_GRANTED)
+        {
+            //open the Gallery!
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+            startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+        }
+        else
+        {
+            //toast informing user need permissions
+        }
+    }
+
+    //override onActivityResult to find out what the user picked
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_LOAD_IMAGE)
+        {
+            Uri uri = data.getData();
+
+            petImageView.setImageURI(uri);
         }
     }
 
