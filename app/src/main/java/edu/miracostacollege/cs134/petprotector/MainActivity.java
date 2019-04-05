@@ -1,5 +1,13 @@
 package edu.miracostacollege.cs134.petprotector;
 
+/**
+ * PetProtector - Lets user add an image from photos or gallery to an image view.
+ *
+ * Dennis La
+ * CS134
+ *
+ */
+
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             //toast informing user need permissions
+            Toast.makeText(this, R.string.need_perms, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -102,7 +112,9 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_LOAD_IMAGE)
+        //if(resultCode == RESULT_LOAD_IMAGE) result code would be -1 but RESULT_LOAD_IMAGE is 200
+
+        if(resultCode == -1) //changed RESULT_LOAD_IMAGE to -1
         {
             Uri uri = data.getData();
 
