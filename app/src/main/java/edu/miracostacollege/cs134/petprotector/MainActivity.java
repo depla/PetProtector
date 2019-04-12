@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         //Connect the ListView with the layout
         petListView = findViewById(R.id.petListView);
 
+        //delete all pets in database for app testing
+        //db.deleteAllPets();
+
         petList = db.getAllPets();
 
         petListAdapter = new PetListAdapter(this, R.layout.pet_list_item, petList);
@@ -83,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
         String details = detailsEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
 
-        if(phone.length() > 10)
-        {
-            Toast.makeText(this, getString(R.string.phone_too_long), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(details) || TextUtils.isEmpty(phone))
         {
             Toast.makeText(this, getString(R.string.missing_info), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(phone.length() != 10)
+        {
+            Toast.makeText(this, getString(R.string.invalid_phone), Toast.LENGTH_SHORT).show();
             return;
         }
 

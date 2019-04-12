@@ -10,6 +10,6 @@
     <string name="photo">photo of pet</string>
     <string name="need_perms">Need permissions to proceed.</string>
     <string name="missing_info">Please fill out all of the information.</string>
-    <string name="phone_too_long">Phone number is too long.</string>
+    <string name="invalid_phone">Phone number is invalid.</string>
 
 </resources>
