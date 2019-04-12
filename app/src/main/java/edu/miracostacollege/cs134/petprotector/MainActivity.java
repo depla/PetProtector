@@ -21,29 +21,107 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.miracostacollege.cs134.petprotector.model.DBHelper;
+import edu.miracostacollege.cs134.petprotector.model.Pet;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageView petImageView;
     public static final int RESULT_LOAD_IMAGE = 200;
 
+    private List<Pet> petList;
+    private PetListAdapter petListAdapter;
+    private ListView petListView;
+
+    private DBHelper db;
+    private Uri petUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = new DBHelper(this);
+
         //connect pet image view to the layout
-        petImageView = findViewById(R.id.petImageView);
+        petImageView = findViewById(R.id.petListImageView);
 
         //setImageUri on the petImageView
         petImageView.setImageURI(getUriToResource(this, R.drawable.none));
+
+        //default pet uri
+        petUri = getUriToResource(this, R.drawable.none);
+
+        //Connect the ListView with the layout
+        petListView = findViewById(R.id.petListView);
+
+        petList = db.getAllPets();
+
+        petListAdapter = new PetListAdapter(this, R.layout.pet_list_item, petList);
+
+        petListView.setAdapter(petListAdapter);
     }
+
+
+    public void addPet(View view)
+    {
+        EditText nameEditText = findViewById(R.id.nameEditText);
+        EditText detailsEditText = findViewById(R.id.detailsEditText);
+        EditText phoneEditText = findViewById(R.id.phoneEditText);
+
+        String name = nameEditText.getText().toString();
+        String details = detailsEditText.getText().toString();
+        String phone = phoneEditText.getText().toString();
+
+        if(phone.length() > 10)
+        {
+            Toast.makeText(this, getString(R.string.phone_too_long), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(details) || TextUtils.isEmpty(phone))
+        {
+            Toast.makeText(this, getString(R.string.missing_info), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Pet newPet = new Pet(name, details, phone, petUri);
+
+        //add to database
+        db.addPet(newPet);
+
+        //update list adapter
+        petListAdapter.add(newPet);
+
+        //clear edit texts
+        nameEditText.setText("");
+        detailsEditText.setText("");
+        phoneEditText.setText("");
+
+    }
+
+    public void viewPetDetails(View view)
+    {
+        Pet selectedPet = (Pet) view.getTag();
+
+        Intent detailsIntent = new Intent(this, PetDetailsActivity.class);
+
+        detailsIntent.putExtra("SelectedPet", selectedPet);
+
+        startActivity(detailsIntent);
+    }
+
+
 
     public void selectPetImage(View v)
     {
@@ -117,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode == -1) //changed RESULT_LOAD_IMAGE to -1
         {
             Uri uri = data.getData();
+
+            //keep reference to uri
+            petUri = uri;
 
             petImageView.setImageURI(uri);
         }
