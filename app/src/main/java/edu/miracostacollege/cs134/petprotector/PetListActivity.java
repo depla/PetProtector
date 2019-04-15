@@ -1,13 +1,5 @@
 package edu.miracostacollege.cs134.petprotector;
 
-/**
- * PetProtector - Lets user add an image from photos or gallery to an image view.
- *
- * Dennis La
- * CS134
- *
- */
-
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -34,10 +26,18 @@ import java.util.List;
 import edu.miracostacollege.cs134.petprotector.model.DBHelper;
 import edu.miracostacollege.cs134.petprotector.model.Pet;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * PetListActivity.java - Lets user add a pet for adoption by picking a picture from the gallery/photos
+ * and entering information about the pet
+ *
+ * @author Dennis La
+ * @version 1.0
+ *
+ */
+public class PetListActivity extends AppCompatActivity {
 
     private ImageView petImageView;
-    public static final int RESULT_LOAD_IMAGE = 200;
+    private static final int RESULT_LOAD_IMAGE = 200;
 
     private List<Pet> petList;
     private PetListAdapter petListAdapter;
@@ -46,10 +46,16 @@ public class MainActivity extends AppCompatActivity {
     private DBHelper db;
     private Uri petUri;
 
+    /**
+     * Creates a DBHelper object, connect the views to the layout and sets the adapter on the list
+     * view
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_pet_list);
 
         db = new DBHelper(this);
 
@@ -76,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Method to add pet to the database and list view.
+     *
+     * @param view the add pet button
+     */
     public void addPet(View view)
     {
         EditText nameEditText = findViewById(R.id.nameEditText);
@@ -113,8 +124,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method to go to the PetDetails activity using the data from the selected pet
+     *
+     * @param view the list item that was chosen
+     */
     public void viewPetDetails(View view)
     {
+        //get the pet from the tag
         Pet selectedPet = (Pet) view.getTag();
 
         Intent detailsIntent = new Intent(this, PetDetailsActivity.class);
@@ -124,8 +141,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(detailsIntent);
     }
 
-
-
+    /**
+     * Asks user for permission to camera and photos to get image from phone to put into the
+     * image view
+     *
+     * @param v the pet image view
+     */
     public void selectPetImage(View v)
     {
         //1. make a list of permissions, empty at first
@@ -187,7 +208,13 @@ public class MainActivity extends AppCompatActivity {
 
     //override onActivityResult to find out what the user picked
 
-
+    /**
+     * Sets the image view to the picture chosen using its Uri
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data the picture chosen
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -206,6 +233,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Get uri from a resource
+     *
+     * @param context this
+     * @param id the id of the resource
+     * @return the uri of that resource
+     */
     private static Uri getUriToResource(Context context, int id)
     {
         Resources res = context.getResources();

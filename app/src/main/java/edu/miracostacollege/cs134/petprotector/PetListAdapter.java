@@ -14,12 +14,25 @@ import java.util.List;
 
 import edu.miracostacollege.cs134.petprotector.model.Pet;
 
+/**
+ * PetListAdapter.java - custom adapter to inflate the list view
+ *
+ * @author Dennis La
+ * @version 1.0
+ */
 public class PetListAdapter extends ArrayAdapter<Pet>
 {
     private Context mContext;
     private List<Pet> mPetList;
     private int mResourceId;
 
+    /**
+     * Constructor for the custom adapter
+     *
+     * @param context PetListActivity
+     * @param resource the xml file for the list item
+     * @param objects the list of pets
+     */
     public PetListAdapter(Context context, int resource, List objects)
     {
         super(context, resource, objects);
@@ -30,6 +43,14 @@ public class PetListAdapter extends ArrayAdapter<Pet>
     }
 
 
+    /**
+     * Method to inflate each list item with data from the list of pets
+     *
+     * @param position the position of the list item
+     * @param convertView
+     * @param parent
+     * @return the list item view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {

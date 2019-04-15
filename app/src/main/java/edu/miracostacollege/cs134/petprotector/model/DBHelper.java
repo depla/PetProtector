@@ -10,6 +10,13 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DBHelper.java - class used to help manage database of pets
+ *
+ * @author Dennis La
+ * @version 1.0
+ *
+ */
 public class DBHelper extends SQLiteOpenHelper {
 
     //TASK 1: DEFINE THE DATABASE VERSION, NAME AND TABLE NAME
@@ -25,11 +32,20 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String FIELD_PHONE = "phone";
     private static final String FIELD_IMAGE_URI = "image_uri";
 
-
+    /**
+     * Constructor for DBHelper
+     *
+     * @param context PetListActivity
+     */
     public DBHelper(Context context){
         super (context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Creates a database table if it does not exist
+     *
+     * @param database
+     */
     @Override
     public void onCreate (SQLiteDatabase database){
         String table = "CREATE TABLE IF NOT EXISTS " + DATABASE_TABLE + "("
@@ -41,6 +57,13 @@ public class DBHelper extends SQLiteOpenHelper {
         database.execSQL (table);
     }
 
+    /**
+     * Upgrades the database
+     *
+     * @param database
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase database,
                           int oldVersion,
@@ -51,6 +74,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //********** DATABASE OPERATIONS:  ADD, UPDATE, EDIT, DELETE
 
+    /**
+     * Adds a pet to the database
+     *
+     * @param pet the pet to add
+     */
     public void addPet(Pet pet) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -77,6 +105,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Retrieves all the pets from the database and puts them in a list
+     *
+     * @return the list of all the pets from the database
+     */
     public List<Pet> getAllPets() {
         List<Pet> petList = new ArrayList<>();
         SQLiteDatabase database = getReadableDatabase();
@@ -109,6 +142,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return petList;
     }
 
+    /**
+     * Deletes a given pet in the database
+     *
+     * @param pet the pet to be deleted
+     */
     public void deletePet(Pet pet){
         SQLiteDatabase db = getWritableDatabase();
 
@@ -118,6 +156,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Deletes all the pets in the database
+     */
     public void deleteAllPets()
     {
         SQLiteDatabase db = getWritableDatabase();
@@ -125,6 +166,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Updates a given pet in the database
+     *
+     * @param pet the pet to be updated
+     */
     public void updatePet(Pet pet){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -139,6 +185,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Gets a pet from the database based on the id
+     *
+     * @param id the pet to be deleted
+     * @return the pet that was searched for
+     */
     public Pet getPet(int id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(
